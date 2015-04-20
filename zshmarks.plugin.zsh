@@ -22,16 +22,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 
-# USAGE:
-# s bookmarkname - saves the curr dir as bookmarkname
-# g bookmarkname - jumps to the that bookmark
-# g b[TAB] - tab completion is available
-# p bookmarkname - prints the bookmark
-# p b[TAB] - tab completion is available
-# d bookmarkname - deletes the bookmark
-# d [TAB] - tab completion is available
-# l - list all bookmarks
-
 # setup file to store bookmarks
 if [ ! -n "$SDIRS" ]; then
     SDIRS=~/.sdirs
@@ -42,7 +32,7 @@ RED="0;31m"
 GREEN="0;33m"
 
 # save current directory to bookmarks
-function s {
+function bookmark {
     check_help $1
     _bookmark_name_valid "$@"
     if [ -z "$exit_message" ]; then
@@ -53,7 +43,7 @@ function s {
 }
 
 # jump to bookmark
-function go {
+function jumpmark {
     check_help $1
     source $SDIRS
     target="$(eval $(echo echo $(echo \$DIR_$1)))"
@@ -67,14 +57,18 @@ function go {
 }
 
 # print bookmark
-function p {
+function showmark {
     check_help $1
     source $SDIRS
-    echo "$(eval $(echo echo $(echo \$DIR_$1)))"
+    if [[ $# -eq 1 ]]; then
+        echo "$(eval $(echo echo $(echo \$DIR_$1)))"
+    else
+        _list $1
+    fi
 }
 
 # delete bookmark
-function delete {
+function deletemark {
     check_help $1
     _bookmark_name_valid "$@"
     if [ -z "$exit_message" ]; then
@@ -87,25 +81,25 @@ function delete {
 function check_help {
     if [ "$1" = "-h" ] || [ "$1" = "-help" ] || [ "$1" = "--help" ] ; then
         echo ''
-        echo 's      <bookmark_name> - Saves the current directory as "bookmark_name"'
-        echo 'go     <bookmark_name> - Goes (cd) to the directory associated with "bookmark_name"'
-        echo 'p      <bookmark_name> - Prints the directory associated with "bookmark_name"'
-        echo 'delete <bookmark_name> - Deletes the bookmark'
-        echo 'list                   - Lists all available bookmarks'
+        echo 'bookmark   <bookmark_name> - Saves the current directory as "bookmark_name"'
+        echo 'jumpmark   <bookmark_name> - Goes (cd) to the directory associated with "bookmark_name"'
+        echo 'showmark   <bookmark_name> - Prints the directory associated with "bookmark_name"'
+        echo 'showmark                   - Lists all available bookmarks'
+        echo 'deletemark <bookmark_name> - Deletes the bookmark'
         kill -SIGINT $$
     fi
 }
 
 # list bookmarks with dirnam
-function list {
+function _list {
     check_help $1
     source $SDIRS
 
     # if color output is not working for you, comment out the line below '\033[1;32m' == "red"
-    env | sort | awk '/DIR_.+/{split(substr($0,5),parts,"="); printf("\033[0;33m%-20s\033[0m %s\n", parts[1], parts[2]);}'
+    #env | sort | awk '/DIR_.+/{split(substr($0,5),parts,"="); printf("\033[0;33m%-20s\033[0m %s\n", parts[1], parts[2]);}'
 
     # uncomment this line if color output is not working with the line above
-    # env | grep "^DIR_" | cut -c5- | sort |grep "^.*="
+     env | grep "^DIR_" | cut -c5- | sort |grep "^.*="
 }
 # list bookmarks without dirname
 function _l {
@@ -158,12 +152,12 @@ function _purge_line {
 
 # bind completion command for g,p,d to _comp
 if [ $ZSH_VERSION ]; then
-    compctl -K _compzsh go
-    compctl -K _compzsh p
-    compctl -K _compzsh delete
+    compctl -K _compzsh jumpmark
+    compctl -K _compzsh showmark
+    compctl -K _compzsh deletemark
 else
     shopt -s progcomp
-    complete -F _comp go
-    complete -F _comp p
-    complete -F _comp delete
+    complete -F _comp jumpmark
+    complete -F _comp showmark
+    complete -F _comp deletemark
 fi

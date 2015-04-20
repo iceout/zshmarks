@@ -1,7 +1,8 @@
 zshmarks
 ========
 
-A port of [Bashmarks (by huyng)](https://github.com/huyng/bashmarks), a directory bookmarks for the oh-my-zsh
+A port of [Bashmarks (by huyng)](https://github.com/huyng/bashmarks) and [zshmarks
+](https://github.com/linux-china/zshmarks), a directory bookmarks for the oh-my-zsh
 
 ### How to install
 
@@ -18,27 +19,29 @@ A port of [Bashmarks (by huyng)](https://github.com/huyng/bashmarks), a director
 
         source ~/.zshrc
 
-### Differences with Bashmarks
-Because some conflicts with oh-my-zsh and git plugin, changes as following:
-
-* g -> go
-* d -> delete
-* l -> list
-
 ### Shell Commands
 
-    s      <bookmark_name> - Saves the current directory as "bookmark_name"
-    go     <bookmark_name> - Goes (cd) to the directory associated with "bookmark_name"
-    p      <bookmark_name> - Prints the directory associated with "bookmark_name"
-    delete <bookmark_name> - Deletes the bookmark
-    list                 - Lists all available bookmarks
+    bookmark      <bookmark_name> - Saves the current directory as "bookmark_name"
+    jumpmark      <bookmark_name> - Goes (cd) to the directory associated with "bookmark_name"
+    showmark      <bookmark_name> - Prints the directory associated with "bookmark_name"
+    showmark                      - Lists all available bookmarks
+    deletemark    <bookmark_name> - Deletes the bookmark
+
+### Alias
+
+If you were expecting shorter command, you can setup zshmarks to do what you like.
+
+    alias j="jumpmark"
+    alias b="bookmark"
+    alias del="deletemark"  # d is conflict with 'dirs -v | head -10' defined in oh-my-zsh
+    alias p="showmarks"
 
 ### Example Usage
 
     $ cd /var/www/
-    $ s webfolder
+    $ b webfolder
     $ cd /usr/local/lib/
-    $ s locallib
-    $ list
-    $ go web<tab>
-    $ go webfolder
+    $ b locallib
+    $ p
+    $ j web<tab>
+    $ j webfolder
