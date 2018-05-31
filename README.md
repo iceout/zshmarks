@@ -23,7 +23,7 @@ A port of [Bashmarks (by huyng)](https://github.com/huyng/bashmarks) and [zshmar
 
 #### antigen
 
-If you use antigen to mange your zsh plugins, just add `antigen bundle jocelynmallon/zshmarks` to your .zshrc where you're adding your other plugins.
+If you use antigen to mange your zsh plugins, just add `antigen bundle iceout/zshmarks` to your .zshrc where you're adding your other plugins.
 
 ### Shell Commands
 
